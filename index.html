@@ -1,182 +1,377 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام مؤشرات فرع الريادة والأعمال - قلقيلية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        /* اللون الخمري المخصص */
-        .bg-maroon { background-color: #721c24; }
-        .bg-maroon-dark { background-color: #58151c; }
-        .text-maroon { color: #721c24; }
-        .border-maroon { border-color: #721c24; }
+import React, { useState } from 'react';
+import { 
+  FolderTree, 
+  ClipboardList, 
+  Users, 
+  BookOpen, 
+  Link as LinkIcon, 
+  ChevronRight, 
+  ChevronLeft, 
+  Play, 
+  Settings,
+  Award,
+  CheckCircle,
+  ExternalLink
+} from 'lucide-react';
+
+export default function App() {
+  const [mode, setMode] = useState('setup'); // 'setup' or 'presentation'
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [links, setLinks] = useState({
+    structure: '',
+    inventory: '',
+    attendance: '',
+    syllabus: ''
+  });
+
+  const handleLinkChange = (key, value) => {
+    setLinks(prev => ({ ...prev, [key]: value }));
+  };
+
+  const startPresentation = () => {
+    setCurrentSlide(0);
+    setMode('presentation');
+  };
+
+  const nextSlide = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(prev => prev + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(prev => prev - 1);
+    }
+  };
+
+  const slides = [
+    {
+      id: 'intro',
+      title: 'إنجازات قسم المتابعة الميدانية',
+      subtitle: 'مديرية التربية والتعليم - قلقيلية',
+      headName: 'رئيس القسم: أ. عبد اللطيف رضوان',
+      icon: <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Coat_of_arms_of_Palestine.svg/200px-Coat_of_arms_of_Palestine.svg.png" alt="شعار النسر" className="w-32 h-auto mb-6 mx-auto drop-shadow-md" />,
+      content: 'نحو تحول رقمي وابتكار إداري لضمان جودة العملية التعليمية.',
+      isIntro: true
+    },
+    {
+      id: 'structure',
+      title: 'الهيكلية الإلكترونية',
+      icon: <FolderTree className="w-16 h-16 text-blue-500 mb-4" />,
+      description: 'أرشفة وتنظيم كافة ملفات وسجلات القسم بشكل يضمن سهولة وسرعة الوصول إليها.',
+      points: [
+        'تصميم مبني على تقسيم الملفات بأسلوب شجري منظم.',
+        'إلغاء المركزية الورقية وتسهيل الوصول للمعلومة بأي وقت.',
+        'يعزز التحول الرقمي في الإدارة الميدانية.'
+      ],
+      linkKey: 'structure'
+    },
+    {
+      id: 'inventory',
+      title: 'نظام الجرد الإلكتروني',
+      icon: <ClipboardList className="w-16 h-16 text-green-500 mb-4" />,
+      description: 'أتمتة عملية الجرد المدرسي باستخدام نماذج Office 365 و OneDrive.',
+      points: [
+        'تسهيل العملية على مديري المدارس والسكرتاريا بشكل جذري.',
+        'إخراج تقارير شاملة ومفصلة آلياً دون الحاجة لتفريغ يدوي.',
+        'يشمل كافة بنود الجرد (أثاث، مختبرات، أجهزة، قرطاسية...).'
+      ],
+      linkKey: 'inventory'
+    },
+    {
+      id: 'attendance',
+      title: 'متابعة الدوام المدرسي',
+      icon: <Users className="w-16 h-16 text-purple-500 mb-4" />,
+      description: 'رصد يومي لطبيعة الدوام خلال أيام المهمات وفترة التعلم عن بعد.',
+      points: [
+        'إصدار تقارير يومية بنسب الحضور الوجاهي (للتوجيهي) والإلكتروني.',
+        'رصد دقيق لغيابات طلبة الثانوية العامة والمعلمين.',
+        'المساهمة الفاعلة في تقليل نسب الغياب وإنقاذ العملية التعليمية.'
+      ],
+      linkKey: 'attendance'
+    },
+    {
+      id: 'syllabus',
+      title: 'متابعة المادة المقطوعة',
+      icon: <BookOpen className="w-16 h-16 text-orange-500 mb-4" />,
+      description: 'استغلال النماذج الإلكترونية لمتابعة تقدم المنهاج لمباحث الثانوية العامة.',
+      points: [
+        'رصد دوري وحثيث خلال أشهر (شباط، آذار، نيسان).',
+        'إخراج تقارير مقارنة على مستوى المدرسة، الفرع، والمحافظة.',
+        'تسهيل مناقشة النتائج مع المدراء والمشرفين لضمان ختم المناهج بالوقت المحدد.'
+      ],
+      linkKey: 'syllabus'
+    },
+    {
+      id: 'outro',
+      title: 'الأثر والقيمة المضافة',
+      icon: <CheckCircle className="w-24 h-24 text-teal-400 mb-6 mx-auto" />,
+      description: 'بصمة القسم في تطوير الأداء المؤسسي الرقمي',
+      points: [
+        'توفير الوقت والجهد على الكوادر الإدارية والميدانية.',
+        'دقة وسرعة في توفير البيانات والتقارير لصناع القرار.',
+        'حوكمة العمليات الإدارية والتعليمية بكفاءة عالية.'
+      ],
+      isIntro: true
+    }
+  ];
+
+  if (mode === 'setup') {
+    return (
+      <div dir="rtl" className="min-h-screen bg-slate-50 text-slate-800 font-sans p-8 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-8 border border-slate-100">
+          <div className="flex items-center gap-3 mb-8 border-b pb-4">
+            <Settings className="w-8 h-8 text-blue-600" />
+            <h1 className="text-2xl font-bold text-slate-800">إعداد العرض التقديمي</h1>
+          </div>
+          
+          <p className="text-slate-600 mb-8">
+            يرجى إدخال روابط المجلدات أو الملفات الخاصة بكل إنجاز لتفعيلها أثناء العرض التقديمي:
+          </p>
+
+          <div className="space-y-6">
+            <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+              <label className="flex items-center gap-2 text-sm font-bold text-blue-900 mb-2">
+                <FolderTree className="w-5 h-5 text-blue-600" />
+                رابط الهيكلية الإلكترونية
+              </label>
+              <div className="relative">
+                <LinkIcon className="absolute right-3 top-3 w-5 h-5 text-slate-400" />
+                <input 
+                  type="url" 
+                  dir="ltr"
+                  placeholder="https://..."
+                  className="w-full pl-4 pr-10 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-left"
+                  value={links.structure}
+                  onChange={(e) => handleLinkChange('structure', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="bg-green-50/50 p-4 rounded-xl border border-green-100">
+              <label className="flex items-center gap-2 text-sm font-bold text-green-900 mb-2">
+                <ClipboardList className="w-5 h-5 text-green-600" />
+                رابط الجرد الإلكتروني
+              </label>
+              <div className="relative">
+                <LinkIcon className="absolute right-3 top-3 w-5 h-5 text-slate-400" />
+                <input 
+                  type="url" 
+                  dir="ltr"
+                  placeholder="https://..."
+                  className="w-full pl-4 pr-10 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all text-left"
+                  value={links.inventory}
+                  onChange={(e) => handleLinkChange('inventory', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+              <label className="flex items-center gap-2 text-sm font-bold text-purple-900 mb-2">
+                <Users className="w-5 h-5 text-purple-600" />
+                رابط متابعة الدوام المدرسي
+              </label>
+              <div className="relative">
+                <LinkIcon className="absolute right-3 top-3 w-5 h-5 text-slate-400" />
+                <input 
+                  type="url" 
+                  dir="ltr"
+                  placeholder="https://..."
+                  className="w-full pl-4 pr-10 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all text-left"
+                  value={links.attendance}
+                  onChange={(e) => handleLinkChange('attendance', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
+              <label className="flex items-center gap-2 text-sm font-bold text-orange-900 mb-2">
+                <BookOpen className="w-5 h-5 text-orange-600" />
+                رابط متابعة المادة المقطوعة
+              </label>
+              <div className="relative">
+                <LinkIcon className="absolute right-3 top-3 w-5 h-5 text-slate-400" />
+                <input 
+                  type="url" 
+                  dir="ltr"
+                  placeholder="https://..."
+                  className="w-full pl-4 pr-10 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all text-left"
+                  value={links.syllabus}
+                  onChange={(e) => handleLinkChange('syllabus', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 text-center">
+            <button 
+              onClick={startPresentation}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full inline-flex items-center gap-2 transition-all transform hover:scale-105 shadow-lg shadow-blue-500/30"
+            >
+              <Play className="w-5 h-5 fill-current" />
+              بدء العرض التقديمي
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const currentSlideData = slides[currentSlide];
+
+  return (
+    <div dir="rtl" className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col">
+      {/* Top Header line */}
+      <div className="h-1 bg-gradient-to-r from-blue-500 via-amber-400 to-green-500 w-full"></div>
+
+      {/* Main Slide Area */}
+      <div className="flex-1 flex flex-col justify-center items-center p-8 relative overflow-hidden">
+        {/* Background decorative elements */}
+        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-slate-300/20 rounded-full blur-3xl"></div>
+
+        <div className="max-w-5xl w-full z-10 transition-all duration-500 transform animate-fade-in">
+          
+          {currentSlideData.isIntro ? (
+            // Title & Outro Slides Format
+            <div className="text-center bg-white/90 backdrop-blur-sm p-16 rounded-3xl border border-slate-200 shadow-xl">
+              {currentSlideData.icon}
+              <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-l from-blue-800 to-blue-500 mb-6 leading-tight">
+                {currentSlideData.title}
+              </h1>
+              {currentSlideData.subtitle && (
+                <h2 className="text-2xl md:text-3xl text-slate-700 font-medium mb-2">
+                  {currentSlideData.subtitle}
+                </h2>
+              )}
+              {currentSlideData.headName && (
+                <h3 className="text-xl md:text-2xl text-blue-700 font-bold mt-4 mb-2">
+                  {currentSlideData.headName}
+                </h3>
+              )}
+              {currentSlideData.description && (
+                <p className="text-xl text-slate-600 mb-8 mt-4">{currentSlideData.description}</p>
+              )}
+              {currentSlideData.content && (
+                <p className="text-lg text-slate-500 mb-8 mt-4">{currentSlideData.content}</p>
+              )}
+              {currentSlideData.points && (
+                <div className="flex flex-col gap-4 max-w-2xl mx-auto mt-8 text-right">
+                  {currentSlideData.points.map((point, idx) => (
+                    <div key={idx} className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                      <CheckCircle className="w-6 h-6 text-blue-500 shrink-0" />
+                      <span className="text-lg text-slate-700">{point}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            // Content Slides Format
+            <div className="bg-white/90 backdrop-blur-sm p-10 md:p-14 rounded-3xl border border-slate-200 shadow-xl flex flex-col md:flex-row gap-12 items-center">
+              
+              <div className="w-full md:w-1/3 flex flex-col items-center justify-center text-center">
+                <div className="bg-slate-50 p-8 rounded-full mb-6 border border-slate-200 shadow-inner">
+                  {currentSlideData.icon}
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+                  {currentSlideData.title}
+                </h2>
+                
+                {/* Dynamic Link Button */}
+                {currentSlideData.linkKey && links[currentSlideData.linkKey] && (
+                  <a 
+                    href={links[currentSlideData.linkKey]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 w-full group relative inline-flex items-center justify-center gap-2 px-6 py-3 font-bold text-white bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/50 transition-all hover:scale-105"
+                  >
+                    <ExternalLink className="w-5 h-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+                    <span>عرض المجلد الخاص بالإنجاز</span>
+                  </a>
+                )}
+                
+                {currentSlideData.linkKey && !links[currentSlideData.linkKey] && (
+                  <p className="mt-6 text-sm text-slate-400 italic">لم يتم إرفاق رابط لهذا الإنجاز في الإعدادات</p>
+                )}
+              </div>
+
+              <div className="w-full md:w-2/3">
+                <h3 className="text-2xl text-blue-600 mb-6 font-semibold border-b border-slate-200 pb-4">
+                  {currentSlideData.description}
+                </h3>
+                <ul className="space-y-5">
+                  {currentSlideData.points.map((point, index) => (
+                    <li key={index} className="flex items-start gap-4 text-lg text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-100 hover:bg-blue-50/50 transition-colors">
+                      <div className="mt-1 bg-blue-100 p-1 rounded-full">
+                        <CheckCircle className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <span className="leading-relaxed">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Navigation Footer */}
+      <div className="p-6 flex items-center justify-between bg-white/80 backdrop-blur border-t border-slate-200 relative z-20">
         
-        .card-animate { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .progress-bar { transition: width 1.5s ease-in-out; }
-        @media print { .no-print { display: none !important; } }
-    </style>
-</head>
-<body class="antialiased text-slate-900">
+        <button 
+          onClick={prevSlide}
+          disabled={currentSlide === 0}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${
+            currentSlide === 0 
+              ? 'text-slate-400 cursor-not-allowed' 
+              : 'text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-blue-600 shadow-sm'
+          }`}
+        >
+          <ChevronRight className="w-5 h-5" />
+          السابق
+        </button>
 
-    <div id="app" class="min-h-screen flex flex-col">
-        <header class="bg-maroon text-white shadow-xl sticky top-0 z-50 no-print">
-            <div class="max-w-7xl mx-auto px-6 py-5">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div class="flex items-center gap-4">
-                        <div class="bg-white/20 p-3 rounded-2xl border border-white/30 text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 20V10M18 20V4M6 20v-4"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h1 class="text-xl md:text-2xl font-black italic"> نظام تحليل مؤشرات الإنجاز  </h1>
-                            <p class="text-rose-200 text-xs font-bold"> مديرية قلقيلية | قسم المتابعة الميدانية | </p>
-                             <p class="text-rose-200 text-xs font-bold"> أ. عبداللطيف رضوان </p>
-                        </div>
-                    </div>
-                    
-                    <div class="relative w-full md:w-96">
-                        <input type="text" id="search-input" placeholder="ابحث عن مدرسة (مثال: عزون)..." 
-                            class="w-full bg-maroon-dark border border-maroon-dark text-white placeholder-rose-300 focus:ring-4 focus:ring-rose-500/20 rounded-2xl py-3 pr-12 pl-4 transition-all font-bold outline-none shadow-inner">
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-rose-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                        </div>
-                        <div id="suggestions" class="absolute w-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50 hidden text-slate-800"></div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <div className="flex gap-2" dir="ltr">
+          {slides.map((_, idx) => (
+            <div 
+              key={idx} 
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                idx === currentSlide ? 'w-8 bg-blue-600' : 'w-2.5 bg-slate-300'
+              }`}
+            />
+          ))}
+        </div>
 
-        <main class="max-w-7xl mx-auto p-6 md:p-10 flex-grow w-full">
-            <div id="welcome-msg" class="text-center py-20 card-animate">
-                <div class="inline-block p-6 bg-white rounded-[3rem] shadow-sm mb-6 border border-rose-100">
-                    <span class="text-6xl">📈</span>
-                </div>
-                <h2 class="text-3xl font-black text-maroon mb-4">تحليل بيانات فرع الريادة والأعمال</h2>
-                <p class="text-slate-500 font-bold max-w-lg mx-auto leading-relaxed">قم بالبحث عن اسم المدرسة لعرض تقارير الإنجاز التفصيلية للمباحث ومقارنتها بالخطة المطلوبة.</p>
-            </div>
+        <button 
+          onClick={nextSlide}
+          disabled={currentSlide === slides.length - 1}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${
+            currentSlide === slides.length - 1 
+              ? 'text-slate-400 cursor-not-allowed' 
+              : 'text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-blue-600 shadow-sm'
+          }`}
+        >
+          التالي
+          <ChevronLeft className="w-5 h-5" />
+        </button>
 
-            <div id="school-card" class="hidden"></div>
-        </main>
+      </div>
+      
+      {/* Floating Settings Button to go back */}
+      <button 
+        onClick={() => setMode('setup')}
+        className="absolute top-6 left-6 text-slate-500 hover:text-slate-800 bg-white/80 p-2 rounded-full hover:bg-slate-100 shadow-sm transition-colors z-50 flex items-center gap-2 pr-4 text-sm border border-slate-200"
+        title="العودة للإعدادات"
+      >
+        <Settings className="w-5 h-5" />
+        <span className="hidden md:inline">تعديل الروابط</span>
+      </button>
 
-        <footer class="bg-white border-t border-slate-200 py-6 no-print text-center">
-            <p class="text-slate-400 text-xs font-black tracking-widest uppercase"> جميع الحقوق محفوظة © 2026- أ.عبداللطيف رضوان </p>
-        </footer>
     </div>
-
-    <script>
-        const subjectsMeta = [
-            { name: "الإدارة والاقتصاد", icon: "📊", target: 146, provRate: "80%" },
-            { name: "التربية الإسلامية", icon: "🕌", target: 115, provRate: "82%" },
-            { name: "التكنولوجيا", icon: "💻", target: 90, provRate: "70%" },
-            { name: "الرياضيات", icon: "📐", target: 130, provRate: "87%" },
-            { name: "اللغة الإنجليزية", icon: "🌐", target: 90, provRate: "80%" },
-            { name: "اللغة العربية", icon: "📖", target: 100, provRate: "78%" },
-            { name: "المحاسبة", icon: "🧮", target: 154, provRate: "80%" },
-            { name: "المشاريع الصغيرة", icon: "💡", target: 122, provRate: "76%" }
-        ];
-
-        const schoolsData = [
-            { name: "ذكور عزون الثانوية", pages: [115, 85, 64, 109, 70, 75, 121, 95], rates: ["79%", "74%", "71%", "84%", "78%", "75%", "79%", "78%"] },
-            { name: "بنات فاطمة سرور الثانوية", pages: [131, 102, 78, 117, 85, 90, 131, 97], rates: ["90%", "89%", "87%", "90%", "94%", "90%", "85%", "80%"] },
-            { name: "حجة الثانوية المختلطة", pages: [118, 98, 56, 100, 70, 73, 123, 86], rates: ["81%", "85%", "62%", "77%", "78%", "73%", "80%", "70%"] },
-            { name: "بنات ابوعلي اياد الثانوية", pages: [131, 96, 66, 132, 81, 80, 130, 84], rates: ["90%", "83%", "73%", "102%", "90%", "80%", "84%", "69%"] },
-            { name: "ذكور السلام الثانوية", pages: [92, 88, 50, 109, 56, 72, 111, 100], rates: ["63%", "77%", "56%", "84%", "62%", "72%", "72%", "82%"] }
-        ];
-
-        const input = document.getElementById('search-input');
-        const suggestions = document.getElementById('suggestions');
-        const cardContainer = document.getElementById('school-card');
-        const welcome = document.getElementById('welcome-msg');
-
-        input.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            suggestions.innerHTML = '';
-            if (val.length < 1) { suggestions.classList.add('hidden'); return; }
-            const matches = schoolsData.filter(s => s.name.includes(val));
-            if (matches.length > 0) {
-                suggestions.classList.remove('hidden');
-                matches.forEach(s => {
-                    const div = document.createElement('div');
-                    div.className = 'p-4 hover:bg-rose-50 cursor-pointer font-bold border-b border-slate-100 flex justify-between';
-                    div.innerHTML = `<span>${s.name}</span> <span class="text-[10px] bg-rose-100 text-maroon px-2 py-1 rounded">فرع الريادة</span>`;
-                    div.onclick = () => { showData(s); suggestions.classList.add('hidden'); input.value = ''; };
-                    suggestions.appendChild(div);
-                });
-            } else { suggestions.classList.add('hidden'); }
-        });
-
-        function showData(school) {
-            welcome.classList.add('hidden');
-            cardContainer.classList.remove('hidden');
-            cardContainer.innerHTML = ''; 
-
-            let subjectsHtml = '';
-            school.pages.forEach((page, i) => {
-                const sRate = parseInt(school.rates[i]);
-                const pRate = parseInt(subjectsMeta[i].provRate);
-                const isHigher = sRate >= pRate;
-
-                subjectsHtml += `
-                    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                        <div class="flex justify-between items-start mb-4">
-                            <span class="text-4xl bg-rose-50 w-16 h-16 flex items-center justify-center rounded-2xl">${subjectsMeta[i].icon}</span>
-                            <div class="text-left">
-                                <p class="text-[10px] font-black text-slate-400 uppercase">المطلوب</p>
-                                <p class="font-black text-slate-700">${subjectsMeta[i].target}</p>
-                            </div>
-                        </div>
-                        <h3 class="text-lg font-black text-slate-800 mb-1">${subjectsMeta[i].name}</h3>
-                        <p class="text-2xl font-black text-maroon mb-4">${page} <span class="text-xs text-slate-400">صفحة</span></p>
-                        
-                        <div class="space-y-2">
-                            <div class="flex justify-between text-[10px] font-bold">
-                                <span>الإنجاز</span>
-                                <span class="${isHigher ? 'text-emerald-600' : 'text-rose-600'}">${school.rates[i]}</span>
-                            </div>
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                <div class="progress-bar h-full ${isHigher ? 'bg-emerald-500' : 'bg-rose-500'}" style="width: ${school.rates[i]}"></div>
-                            </div>
-                            <p class="text-[9px] font-bold ${isHigher ? 'text-emerald-500' : 'text-rose-400'}">
-                                ${isHigher ? '▲ أعلى من متوسط المديرية' : '▼ أقل من متوسط المديرية'}
-                            </p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            cardContainer.innerHTML = `
-                <div class="card-animate space-y-8">
-                    <div class="bg-maroon rounded-[3rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
-                        <div class="relative z-10">
-                            <span class="bg-white/20 text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest border border-white/30">تحليل أداء المدرسة</span>
-                            <h2 class="text-4xl md:text-6xl font-black mt-4 mb-6 tracking-tight">${school.name}</h2>
-                            <div class="flex flex-wrap gap-4">
-                                <button onclick="window.print()" class="bg-white text-maroon px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:bg-rose-50 transition-colors shadow-lg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2z" /></svg>
-                                    طباعة التقرير
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        ${subjectsHtml}
-                    </div>
-                </div>
-            `;
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!input.contains(e.target) && !suggestions.contains(e.target)) suggestions.classList.add('hidden');
-        });
-    </script>
-</body>
-</html>
+  );
+}
 
 
